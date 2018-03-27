@@ -7,9 +7,10 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
+#include <errno.h>
 
 /* MARK NAME Marcelo Nunes da Silva */
-/* MARK NAME Gabriel */
+/* MARK NAME Gabriel Machado de Castro Fonseca*/
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -55,8 +56,8 @@ struct cmd *parsecmd(char*); // Processar o linha de comando.
 void
 runcmd(struct cmd *cmd)
 {
-  int saida;
-  int p[2], r;
+  // int saida;
+  // int p[2];
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
   struct redircmd *rcmd;
@@ -130,16 +131,22 @@ main(void)
   static char buf[100];
   int r;
 
+
   // Ler e rodar comandos.
   while(getcmd(buf, sizeof(buf)) >= 0){
     /* MARK START task1 */
     /* TAREFA1: O que faz o if abaixo e por que ele é necessário?
      * Insira sua resposta no código e modifique o fprintf abaixo
-     * para reportar o erro corretamente. */
+     * para reportar o erro corretamente. 
+       
+       RESPOSTA: O if abaixo muda o diretório atual para o shell.
+       O novo diretório é então utilizado para busca de caminho.
+     */
     if(buf[0] == 'c' && buf[1] == 'd' && buf[2] == ' '){
       buf[strlen(buf)-1] = 0;
       if(chdir(buf+3) < 0)
-        fprintf(stderr, "reporte erro\n");
+        // perror("Erro de diretorio");
+        fprintf(stderr, "Erro de diretório: %s\n", strerror(errno));
       continue;
     }
     /* MARK END task1 */
