@@ -76,9 +76,16 @@ runcmd(struct cmd *cmd)
     /* MARK START task2
      * TAREFA2: Implemente codigo abaixo para executar
      * comandos simples. */
-    fprintf(stderr, "exec ainda sendo implementado\n");
-    execl(ecmd->argv[0],"-all");
-    perror("execv");
+  	
+    //fprintf(stderr, "exec ainda sendo implementado\n");
+
+    //consultar na pasta /bin/comando dado
+    char comando[50] = "/bin/";
+    strcat(comando,ecmd->argv[0]);
+
+    execvp(comando,ecmd->argv);
+    perror("saída:");
+
     /* MARK END task2 */
     break;
 
