@@ -77,15 +77,9 @@ runcmd(struct cmd *cmd)
     /* MARK START task2
      * TAREFA2: Implemente codigo abaixo para executar
      * comandos simples. */
-  	
-    //fprintf(stderr, "exec ainda sendo implementado\n");
 
-    //consultar na pasta /bin/comando dado
-    char comando[50] = "/bin/";
-    strcat(comando,ecmd->argv[0]);
-
-    execvp(comando,ecmd->argv);
-    perror("saída:");
+    execvp(ecmd->argv[0],ecmd->argv);
+    fprintf(stderr, "Erro de comando: %s\n", strerror(errno));
 
     /* MARK END task2 */
     break;
@@ -96,7 +90,17 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    fprintf(stderr, "redir nao implementado\n");
+    //fprintf(stderr, "redir nao implementado\n");
+    
+    //redircmd(rcmd->cmd, char *file, int type)
+    //fprintf(stderr, "Arquivo: %s\n", rcmd->file);
+
+    close(rcmd->fd);
+    if(open(rcmd->file,rcmd->mode) < 0){
+      fprintf(stderr, "Erro de redirecionamento: %s\n", strerror(errno));
+      exit(0);
+    }
+    
     /* MARK END task3 */
     runcmd(rcmd->cmd);
     break;
