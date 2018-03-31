@@ -57,10 +57,11 @@ void
 runcmd(struct cmd *cmd)
 {
   // int saida;
-  // int p[2];
+  int p[2];
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
   struct redircmd *rcmd;
+  mode_t file_access_permissions = ( S_IRUSR | S_IWUSR | S_IXUSR | S_IRGRP | S_IWGRP | S_IXGRP | S_IROTH | S_IXOTH );
 
   if(cmd == 0)
     exit(0);
@@ -90,17 +91,13 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    //fprintf(stderr, "redir nao implementado\n");
-    
-    //redircmd(rcmd->cmd, char *file, int type)
-    //fprintf(stderr, "Arquivo: %s\n", rcmd->file);
 
     close(rcmd->fd);
-    if(open(rcmd->file,rcmd->mode) < 0){
+    if(open(rcmd->file,rcmd->mode,file_access_permissions) < 0){
       fprintf(stderr, "Erro de redirecionamento: %s\n", strerror(errno));
       exit(0);
     }
-    
+
     /* MARK END task3 */
     runcmd(rcmd->cmd);
     break;
@@ -110,7 +107,29 @@ runcmd(struct cmd *cmd)
     /* MARK START task4
      * TAREFA4: Implemente codigo abaixo para executar
      * comando com pipes. */
-    fprintf(stderr, "pipe nao implementado\n");
+    // fprintf(stderr, "pipe nao implementado\n");
+    if (pipe(p) < 0){
+      fprintf(stderr, "Erro de pipe: %s\n", strerror(errno));
+      exit(0); 
+    }
+    if(fork1() == 0){
+      dup2(p[1],1);
+      close(p[0]);
+      close(p[1]);
+      runcmd(pcmd->left);
+    }
+    if(fork1() == 0){
+      dup2(p[0],0);
+      close(p[0]);
+      close(p[1]);
+      runcmd(pcmd->right);
+    }
+    close(p[0]);
+    close(p[1]);
+    wait(NULL);
+    wait(NULL);
+
+
     /* MARK END task4 */
     break;
   }    
