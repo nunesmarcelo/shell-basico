@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <string.h>
+#include <sys/stat.h>
 #include "tinycthread.h"
 
 /* This is the child thread function */
@@ -18,10 +19,11 @@ int topzera(void * aArg)
   return 0;
 }
 
-char buf[32];
+char buf[32] = "\0";
 char *end;
 int pid;
 int res;
+struct stat sts;
 
 int sinalero(void * aArg)
 {
@@ -29,15 +31,41 @@ int sinalero(void * aArg)
 
   while(1){
     printf(">");
-    fgets(buf, sizeof buf, stdin);
-    // buf[strlen(buf) - 1] = 0;
-    pid = strtol(buf, &end, 10);  
+    
+    scanf("%32[0-9]c\n", buf);
+    // if(fgets(buf, sizeof buf, stdin) != NULL){ //Lê o comando do teclado
+    //   pid = strtol(buf, &end, 10);
+    // } else {
+    //   fprintf(stderr, "fgets error: %s\n", strerror(errno) );
+    // }
+
+
+
+    char process[32] = "";
+    strcpy(process, "/proc/");
+    strcpy(process, buf);
+    strcpy(process, "\0");
+
+    // fprintf(stderr, "sai %s\n", process );
+    // exit(0);
+    // if (stat(process, &sts) == 0 && S_ISDIR(sts.st_mode)) {
+  // process doesn't exist
+//       fprintf(stderr, "sai\n" );
+//       exit(0);
+// }
+
+    fprintf(stderr, "buffer: %s\n", process );
+    if (buf == "/proc/")
+    {
+      /* code */
+    }
+
 
     if (kill(pid,SIGKILL) != 0){
-      fprintf(stderr,"%s\n",strerror(errno));
-     } else {
-      fprintf(stderr, "Process %d killed!\n", pid );
-     }
+     fprintf(stderr,"asdfasdf %s\n",strerror(errno));
+    } else {
+     fprintf(stderr, "Process %d killed!\n", pid );
+    }
   }
   return 0;
 }
