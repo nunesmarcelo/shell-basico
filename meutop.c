@@ -9,6 +9,7 @@
 #include <pwd.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <sys/stat.h>
 #include "tinycthread.h"
 
 /* This is the child thread function */
@@ -24,7 +25,6 @@ int topzera(void * aArg)
   return 0;
 }
 
-
 int sinalero(void * aArg){
   (void)aArg;
 
@@ -35,6 +35,7 @@ int sinalero(void * aArg){
 
 
   while(1){
+
     move(20, 0);
     clrtoeol();
     mvprintw(20,0,">");
@@ -50,6 +51,7 @@ int sinalero(void * aArg){
      } else {
       mvprintw(21,0, "Process %d killed!\n", pid );
      }
+
   }
 }
 
