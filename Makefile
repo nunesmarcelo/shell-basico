@@ -7,9 +7,9 @@ endif
 # Compiler settings
 CC = gcc
 ifeq ($(findstring gcc, $(CC)), gcc)
-CFLAGS = -W  -std=c11 -O3 -lncurses
+CFLAGS = -Wall  -std=c11 -O3 -lncurses
 else
-CFLAGS = -W -O3 -c
+CFLAGS = -Wall -O3 -c
 endif
 LFLAGS =
 LIBS =
@@ -49,6 +49,7 @@ TEST_OBJS = meutop.o
 
 # TinyCThread object files
 TINYCTHREAD_OBJS = tinycthread.o
+MY_INPUT = my_input.o
 
 all:  meutop$(EXE)
 
@@ -57,8 +58,8 @@ clean: $(RM) meutop$(EXE) $(TEST_OBJS) $(TINYCTHREAD_OBJS)
 check: all
 	./meutop$(EXE)
 
-meutop$(EXE): $(TEST_OBJS) $(TINYCTHREAD_OBJS)
-	$(CC) $(LFLAGS) -o $@ $(TEST_OBJS) $(TINYCTHREAD_OBJS) $(LIBS)
+meutop$(EXE): $(TEST_OBJS) $(TINYCTHREAD_OBJS) $(MY_INPUT)
+	$(CC) $(LFLAGS) -o $@ $(TEST_OBJS) $(TINYCTHREAD_OBJS) $(MY_INPUT) $(LIBS)
 
 
 
